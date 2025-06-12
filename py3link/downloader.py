@@ -154,20 +154,48 @@ class Downloader:
                     self.pbar = None
 
         opts = {
-            'outtmpl': destination or '%(title)s.%(ext)s',
-            'progress_hooks': [YTDLPProgressHook()],
             'quiet': True,
             'no_warnings': True,
-            'format': 'best',
+            'format': 'bestvideo+bestaudio/best',
             'merge_output_format': 'mp4',
             'noplaylist': True,
         }
+
         try:
             with yt_dlp.YoutubeDL(opts) as ydl:
-                info = ydl.extract_info(url, download=True)
+                info = ydl.extract_info(url, download=False)
+
+                title = info.get("title", "Без названия")
+                filesize = info.get("filesize") or info.get("filesize_approx") or 0
+                ext = info.get("ext", "mp4")
+                format_note = info.get("format_note", "")
+                resolution = info.get("height", "")
+                final_size = self.format_size(filesize)
+
+                print(f"\n📹 Видео: {title}")
+                print(f"📦 Формат: {format_note} | {resolution}p | {ext}")
+                print(f"💾 Размер: {final_size}")
+
+                choice = input("✅ Начать загрузку? (да/нет): ").strip().lower()
+                if choice not in ['да', 'y', 'yes']:
+                    print("🚫 Загрузка отменена.")
+                    return False, ""
+
+                # Формируем безопасное имя файла
                 if destination is None:
-                    destination = ydl.prepare_filename(info)
-            return True, destination
+                    safe_title = "".join(c for c in title if c.isalnum() or c in (' ', '.', '_')).rstrip()
+                    destination = os.path.join(os.getcwd(), f"{safe_title}.{ext}")
+
+                opts.update({
+                    'outtmpl': destination,
+                    'progress_hooks': [YTDLPProgressHook()],
+                })
+
+                with yt_dlp.YoutubeDL(opts) as ydl_with_download:
+                    ydl_with_download.download([url])
+
+                return True, destination
+
         except Exception as e:
-            print(f"\nОшибка при загрузке медиа: {e}")
-            return False, destination
+            print(f"\n❌ Ошибка при загрузке медиа: {e}")
+            return False, destination or ""
