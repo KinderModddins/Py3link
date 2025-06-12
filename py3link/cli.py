@@ -1,6 +1,6 @@
 import sys
 import os
-from downloader import Downloader
+from py3link.downloader import Downloader
 
 def main():
     if len(sys.argv) < 2:
