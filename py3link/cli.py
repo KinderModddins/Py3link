@@ -3,7 +3,7 @@ from .downloader import download_file, download_media_yt_dlp, download_file_thre
 
 def main():
     if len(sys.argv) < 2:
-        print("Использование: pylink <URL> [путь_сохранения]")
+        print("Использование: py3link <URL> [путь_сохранения]")
         sys.exit(1)
 
     url = sys.argv[1]

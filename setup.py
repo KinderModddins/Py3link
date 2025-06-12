@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='Py3link',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'pylink = pylink.cli:main',
+            'pylink = py3link.cli:main',
         ],
     },
     install_requires=[
@@ -15,11 +15,11 @@ setup(
         'tqdm',
     ],
     author='MAKCNMOB',
-    author_email='your.email@example.com',
+    author_email='mail@example.com',
     description='A powerful and beautiful Python library for downloading files and videos from various sources.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/KinderModddins/pylink',
+    url='https://github.com/KinderModddins/py3link',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
